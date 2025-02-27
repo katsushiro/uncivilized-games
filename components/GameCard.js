@@ -30,8 +30,9 @@ export default function GameCard({ game }) {
       
       <div className="p-4">
         <h3 className="text-xl font-bold text-white mb-2">{game.title}</h3>
-        <p className="text-gray-300 mb-4 line-clamp-3"><TruncatedText text={game.description} maxLength={150} /></p>
-        
+        <div className="text-gray-300 mb-4">
+        <TruncatedText text={game.description} maxLength={150} />
+        </div>
         <div className="flex flex-col gap-2 mb-4">
           <div className="flex items-center text-gray-300">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
