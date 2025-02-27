@@ -51,17 +51,17 @@ export default function Footer() {
               <h3 className="text-sm font-semibold text-gray-400 uppercase mb-4">Connect</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="https://startplaying.games" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                  <a href="https://startplaying.games/gm/uncivilizedgames" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
                     StartPlaying.Games
                   </a>
                 </li>
                 <li>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                    Twitter
+                  <a href="https://bsky.app/profile/uncivilizeddan.bsky.social" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                    BlueSky
                   </a>
                 </li>
                 <li>
-                  <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                  <a href="https://discordapp.com/users/330898240805404672" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
                     Discord
                   </a>
                 </li>
@@ -74,11 +74,6 @@ export default function Footer() {
           <p className="text-sm text-gray-400">
             © {currentYear} Uncivilized Games. All rights reserved.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="https://pika.page" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-              PIKA
-            </a>
-          </div>
         </div>
       </div>
     </footer>
