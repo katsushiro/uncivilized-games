@@ -9,7 +9,7 @@ export default function TruncatedText({ text, maxLength = 150 }) {
   if (text.length <= maxLength || isExpanded) {
     return (
       <div>
-        <p className="text-gray-200">{text}</p>
+        <p className="text-gray-200 whitespace-pre-line">{text}</p>
         {text.length > maxLength && isExpanded && (
           <button 
             onClick={() => setIsExpanded(false)}
@@ -24,7 +24,7 @@ export default function TruncatedText({ text, maxLength = 150 }) {
   
   return (
     <div>
-      <p className="text-gray-200">{text.substring(0, maxLength)}...</p>
+      <p className="text-gray-200 whitespace-pre-line">{text.substring(0, maxLength)}...</p>
       <button 
         onClick={() => setIsExpanded(true)}
         className="text-blue-400 hover:underline mt-2 text-sm font-medium"
