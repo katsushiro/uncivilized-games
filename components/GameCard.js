@@ -18,15 +18,16 @@ export default function GameCard({ game }) {
   
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-[1.02]">
-      <div className="relative h-48 w-full">
+     
+        <div className="relative w-full aspect-video">
         <Image 
-          src={imageUrl} 
-          alt={game.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            src={imageUrl} 
+            alt={game.title}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
-      </div>
+        </div>
       
       <div className="p-4">
         <h3 className="text-xl font-bold text-white mb-2">{game.title}</h3>
