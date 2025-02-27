@@ -14,9 +14,7 @@ const dayNames = {
 };
 
 export default function GameCard({ game }) {
-    const imageUrl = game.coverImage 
-    ? urlFor(game.coverImage).width(600).height(Math.round(600 * (630/1120))).url() 
-    : '/placeholder-game.jpg';
+    const imageUrl = game.coverImage ? urlFor(game.coverImage).width(600).height(Math.round(600 * (630/1120))).url() : '/placeholder-game.jpg';
   
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-[1.02]">
