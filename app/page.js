@@ -1,5 +1,6 @@
 import { fetchGames, fetchRecentPosts, fetchFeaturedApps } from '@/lib/sanity';
 import GameCard from '@/components/GameCard';
+import GameCarousel from '@/components/GameCarousel'; // Add this import
 import PostCard from '@/components/PostCard';
 import AppCard from '@/components/AppCard';
 import Link from 'next/link';
@@ -36,11 +37,7 @@ export default async function Home() {
         </div>
         
         {games.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {games.slice(0, 3).map((game) => (
-              <GameCard key={game._id} game={game} />
-            ))}
-          </div>
+          <GameCarousel games={games} /> // Replace static grid with GameCarousel
         ) : (
           <div className="bg-gray-800 rounded-lg p-6 text-center">
             <p className="text-gray-300">No games available at the moment. Check back soon!</p>
