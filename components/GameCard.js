@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlFor } from '@/lib/sanity';
+import TruncatedText from '@/components/TruncatedText';
 
 const dayNames = {
   monday: 'Monday',
@@ -29,7 +30,7 @@ export default function GameCard({ game }) {
       
       <div className="p-4">
         <h3 className="text-xl font-bold text-white mb-2">{game.title}</h3>
-        <p className="text-gray-300 mb-4 line-clamp-3">{game.description}</p>
+        <p className="text-gray-300 mb-4 line-clamp-3"><TruncatedText text={game.description} maxLength={150} /></p>
         
         <div className="flex flex-col gap-2 mb-4">
           <div className="flex items-center text-gray-300">
