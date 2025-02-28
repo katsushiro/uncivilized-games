@@ -19,7 +19,7 @@ export default async function Home() {
             Welcome to Uncivilized Games
           </h1>
           <p className="text-xl text-gray-300 mb-6">
-            Join my tabletop RPG adventures and explore unique gaming experiences
+            Wherein are contained the various games, GM opportunities, and assorted TTRPG musings of one Dan.
           </p>
           <Link href="/games" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
             Browse Available Games
