@@ -61,8 +61,28 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
+                  <a href="https://dice.camp/@UncivilizedDan" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                    Mastodon
+                  </a>
+                </li>
+                <li>
                   <a href="https://discordapp.com/users/330898240805404672" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
                     Discord
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.youtube.com/@UncivilizedGames" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                    YouTube
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitch.tv/uncivilizeddan" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                    Twitch
+                  </a>
+                </li>
+                <li>
+                  <a href="https://ko-fi.com/uncivilizeddan" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+                    Ko-Fi
                   </a>
                 </li>
               </ul>
