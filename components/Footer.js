@@ -39,11 +39,6 @@ export default function Footer() {
                     Apps
                   </Link>
                 </li>
-                <li>
-                  <Link href="/guestbook" className="text-gray-300 hover:text-white">
-                    Guestbook
-                  </Link>
-                </li>
               </ul>
             </div>
             

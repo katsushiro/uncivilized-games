@@ -51,11 +51,6 @@ export default function Header() {
                   Apps
                 </Link>
               </li>
-              <li>
-                <Link href="/guestbook" className="text-white hover:text-blue-400 transition">
-                  Guestbook
-                </Link>
-              </li>
             </ul>
           </nav>
         </div>
