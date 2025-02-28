@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Goblins Generator</title>
+    <style>
+        :root {
+            --primary-color: #2c5530;
+            --secondary-color: #8b4513;
+            --accent-color: #ffd700;
+            --background-color: #f4f1e9;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            text-align: center;
+            font-size: 2.5em;
+            text-shadow: 2px 2px var(--accent-color);
+        }
+
+        .button-container, .edition-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        button, select {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: transform 0.2s;
+        }
+
+        select {
+            background-color: var(--secondary-color);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background-color: var(--secondary-color);
+        }
+
+        #result {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            button, select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3 Goblins Generator</h1>
+        
+        <div class="edition-select">
+            <select id="editionSelect">
+                <option value="original">Original Edition</option>
+                <option value="freedom">Freedom Edition</option>
+                <option value="both">Combined Editions</option>
+            </select>
+            <select id="goblinCount">
+                <option value="2">2 Goblins</option>
+                <option value="3" selected>3 Goblins</option>
+                <option value="4">4 Goblins</option>
+                <option value="5">5 Goblins</option>
+            </select>
+        </div>
+
+        <div class="button-container">
+            <button onclick="generateSingleGoblin()">Generate Single Goblin</button>
+            <button onclick="generateGoblinGroup()">Generate Goblin Group</button>
+            <button onclick="generateAdventure()">Generate Adventure</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Original edition data
+        const originalTypes = [
+            { name: "Short", bonus: { stat: "cheating", value: 1 } },
+            { name: "Plump", bonus: { stat: "health", value: 1 } },
+            { name: "Wiry", bonus: { special: "Roll twice when trying to Hold Together, keep best result" } },
+            { name: "Buff", bonus: { special: "Roll twice when rolling to attack, keep best result" } },
+            { name: "Cute", bonus: { stat: "lying", value: 1 } },
+            { name: "Twisted", bonus: { special: "Can use Goblin Magic" } }
+        ];
+
+        const originalFeatures = [
+            { name: "Big ears", bonus: { special: "Roll twice when trying to hear things, keep best result" } },
+            { name: "Big eyes", bonus: { special: "Roll twice when trying to see things, keep best result" } },
+            { name: "Big mouth", bonus: { stat: "lying", value: 1 } },
+            { name: "Big teeth", bonus: { special: "Can eat anything that's the size of your head or smaller" } },
+            { name: "Big nose", bonus: { special: "Roll twice when trying to smell things, keep best result" } },
+            { name: "Big brain", bonus: { stats: [
+                { stat: "lying", value: 1 },
+                { stat: "cheating", value: 1 },
+                { stat: "health", value: -1 }
+            ] }}
+        ];
+
+        // Freedom edition data
+        const freedomTypes = [
+            { name: "Fast", bonus: { special: "Act twice on your turn in combat" } },
+            { name: "Filthy", bonus: { stats: [
+                { stat: "health", value: 1 },
+                { special: "+1 to intimidation rolls due to stench" }
+            ] }},
+            { name: "Twitchy", bonus: { special: "+2 to any rolls to spot surprises or danger" } },
+            { name: "'Merican", bonus: { special: "+1 to any roll if you can first get someone else to hold your beer" } },
+            { name: "British", bonus: { special: "Regain 1 Health any time you drink tea" } },
+            { name: "WIIIIITCH!", bonus: { special: "Can use Goblin Magic" } }
+        ];
+
+        const freedomFeatures = [
+            { name: "Big Feet", bonus: { special: "+1 to rolls to outrun things, +1 to Hold Together rolls if you're the Feet" } },
+            { name: "Big Hair", bonus: { special: "+2 to rolls involving performance" } },
+            { name: "Big Arms", bonus: { special: "+1 to damage when attacking" } },
+            { name: "Big Liver", bonus: { special: "+2 to rolls involving drinking" } },
+            { name: "Big Heart", bonus: { special: "+2 to rolls involving empathizing with others" } },
+            { name: "Just Big", bonus: { stats: [
+                { stat: "health", value: 1 },
+                { stat: "lying", value: 1 }
+            ] }}
+        ];
+
+        // Magic data
+        const originalSpells = [
+            "Darkness (roll 1d6, on 4-6 the area goes dark, blinding everyone)",
+            "Snotbomb (roll 1d6, on 4-6 target is immobilized by sticky snot)",
+            "Eyegleam (roll 1d6, on 4-6 you can see in the dark, behind walls, etc.)",
+            "Charm Vermin (roll 1d6, on 4-6 control any rats, pigeons, or bugs for a scene)",
+            "Sicken (roll 1d6, on 4-6 target becomes sick and unable to act for the scene)",
+            "Ogrecall (roll 1d6, on 4-6 an ogre appears. Everyone must deal with it)"
+        ];
+
+        const freedomSpells = [
+            "CURSES! (cast a nasty hex on your target, -1 to their next roll)",
+            "ZAP! (do a dance, lightning strikes for 2 damage)",
+            "TOADIFY! (turn your target into a toad. Delicious.)",
+            "FLY! (need a broom, allows flight for one scene)",
+            "SOOTHING POULTICE! (heal target for 2 points)",
+            "SUMMON NIPPLE! (give someone an extra nipple. Disturbing.)"
+        ];
+
+        // Position data
+        const positions = {
+            2: [
+                { name: "Head", bonus: { stat: "lying", value: 1 } },
+                { name: "Legs", bonus: { stat: "cheating", value: 1 } }
+            ],
+            3: [
+                { name: "Head", bonus: { stat: "lying", value: 1 } },
+                { name: "Torso", bonus: { stat: "health", value: 1 } },
+                { name: "Legs", bonus: { stat: "cheating", value: 1 } }
+            ],
+            4: [
+                { name: "Head", bonus: { stat: "lying", value: 1 } },
+                { name: "Right Arm", bonus: { stat: "health", value: 1 } },
+                { name: "Left Arm", bonus: { stat: "health", value: 1, special: "Can Cooperate with Right Arm" } },
+                { name: "Legs", bonus: { stat: "cheating", value: 1 } }
+            ],
+            5: [
+                { name: "Head", bonus: { stat: "lying", value: 1 } },
+                { name: "Right Arm", bonus: { stat: "health", value: 1 } },
+                { name: "Left Arm", bonus: { stat: "health", value: 1, special: "Can Cooperate with Right Arm" } },
+                { name: "Legs", bonus: { stat: "cheating", value: 1 } },
+                { name: "Spine", bonus: { stats: [
+                    { stat: "health", value: 1 },
+                    { special: "HOOOOOOLD! ability: Sacrifice 1 Health for +2 to Hold Together rolls" }
+                ] }}
+            ]
+        };
+        function getEditionData() {
+            const edition = document.getElementById('editionSelect').value;
+            let types, features;
+
+            switch(edition) {
+                case 'original':
+                    types = originalTypes;
+                    features = originalFeatures;
+                    break;
+                case 'freedom':
+                    types = freedomTypes;
+                    features = freedomFeatures;
+                    break;
+                case 'both':
+                    types = [...originalTypes, ...freedomTypes];
+                    features = [...originalFeatures, ...freedomFeatures];
+                    break;
+            }
+            return { types, features };
+        }
+
+        function randomFromArray(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function distributePoints() {
+            let points = 3;
+            let stats = {
+                lying: 1,
+                cheating: 1,
+                health: 3
+            };
+            
+            while (points > 0) {
+                const stat = Math.random() < 0.5 ? 'lying' : 'cheating';
+                stats[stat]++;
+                points--;
+            }
+            
+            return stats;
+        }
+
+        function applyBonuses(stats, type, feature, position) {
+            let specialAbilities = [];
+            let statModifiers = {
+                lying: [],
+                cheating: [],
+                health: []
+            };
+
+            function applyBonus(bonus, source) {
+                if (bonus.stat) {
+                    stats[bonus.stat] += bonus.value;
+                    statModifiers[bonus.stat].push({
+                        source: source,
+                        value: bonus.value
+                    });
+                }
+                if (bonus.stats) {
+                    bonus.stats.forEach(statBonus => {
+                        if (statBonus.stat) {
+                            stats[statBonus.stat] += statBonus.value;
+                            statModifiers[statBonus.stat].push({
+                                source: source,
+                                value: statBonus.value
+                            });
+                        }
+                        if (statBonus.special) {
+                            specialAbilities.push(statBonus.special);
+                        }
+                    });
+                }
+                if (bonus.special) {
+                    specialAbilities.push(bonus.special);
+                }
+            }
+
+            if (type.bonus) applyBonus(type.bonus, type.name);
+            if (feature.bonus) applyBonus(feature.bonus, feature.name);
+            if (position && position.bonus) applyBonus(position.bonus, `${position.name} Position`);
+
+            // Check for magic ability and assign spell
+            const hasMagic = specialAbilities.some(ability => ability === "Can use Goblin Magic");
+            let spell = null;
+            if (hasMagic) {
+                const edition = document.getElementById('editionSelect').value;
+                if (edition === 'original') {
+                    spell = randomFromArray(originalSpells);
+                } else if (edition === 'freedom') {
+                    spell = randomFromArray(freedomSpells);
+                } else {
+                    spell = randomFromArray(Math.random() < 0.5 ? originalSpells : freedomSpells);
+                }
+            }
+
+            return { stats, specialAbilities, statModifiers, spell };
+        }
+
+        function formatStat(statName, baseValue, modifiers) {
+            let total = baseValue;
+            let modString = "";
+            
+            modifiers.forEach(mod => {
+                total += mod.value;
+                modString += `${mod.value > 0 ? '+' : ''}${mod.value} from ${mod.source}, `;
+            });
+            
+            if (modString) {
+                modString = ` (${modString.slice(0, -2)})`;
+            }
+            
+            return `${statName}: ${total}${modString}`;
+        }
+
+        function generateSingleGoblin() {
+            const { types, features } = getEditionData();
+            const type = randomFromArray(types);
+            const feature = randomFromArray(features);
+            let stats = distributePoints();
+            
+            const { stats: finalStats, specialAbilities, statModifiers, spell } = applyBonuses(stats, type, feature);
+
+            let html = `
+                <h2>Your Goblin:</h2>
+                <p><strong>Type:</strong> ${type.name}</p>
+                <p><strong>Feature:</strong> ${feature.name}</p>
+                <p><strong>Stats:</strong></p>
+                <ul>
+                    <li>${formatStat('Lying', stats.lying, statModifiers.lying)}</li>
+                    <li>${formatStat('Cheating', stats.cheating, statModifiers.cheating)}</li>
+                    <li>${formatStat('Health', stats.health, statModifiers.health)}</li>
+                </ul>
+            `;
+
+            if (specialAbilities.length > 0) {
+                html += `
+                    <p><strong>Special Abilities:</strong></p>
+                    <ul>
+                        ${specialAbilities.map(ability => `<li>${ability}</li>`).join('')}
+                    </ul>
+                `;
+            }
+
+            if (spell) {
+                html += `
+                    <p><strong>Spell:</strong> ${spell}</p>
+                `;
+            }
+
+            document.getElementById('result').innerHTML = html;
+        }
+
+        function generateGoblinGroup() {
+            const { types, features } = getEditionData();
+            const goblinCount = parseInt(document.getElementById('goblinCount').value);
+            const currentPositions = positions[goblinCount];
+            
+            const trenchcoats = [
+                "Wool Coat (fancy and stylish, +1 to Lying rolls)",
+                "Leather Coat (durable, +1 to Hold Together)",
+                "Coat of Many Pockets (roll 1d6, on 5-6 you have helpful items)",
+                "Officer's Coat (+1 to Lying or Cheating rolls vs. guards)",
+                "Winter Coat (reduces all damage taken by 1)",
+                "Sealskin Coat (+1 to Hold Together, reduce damage by 1, beware seals)"
+            ];
+
+            let html = `
+                <h2>Your Goblin Group (${goblinCount} Goblins):</h2>
+                <p><strong>Trenchcoat:</strong> ${randomFromArray(trenchcoats)}</p>
+                <h3>Goblins:</h3>
+            `;
+
+            // Create array of positions and shuffle it
+            let positionArray = [...currentPositions];
+            for (let i = positionArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [positionArray[i], positionArray[j]] = [positionArray[j], positionArray[i]];
+            }
+
+            for (let i = 0; i < goblinCount; i++) {
+                const type = randomFromArray(types);
+                const feature = randomFromArray(features);
+                const position = positionArray[i];
+                let stats = distributePoints();
+                
+                const { stats: finalStats, specialAbilities, statModifiers, spell } = 
+                    applyBonuses(stats, type, feature, position);
+
+                html += `
+                    <div style="margin-bottom: 20px;">
+                        <h4>Goblin ${i + 1} - ${position.name}</h4>
+                        <p><strong>Type:</strong> ${type.name}</p>
+                        <p><strong>Feature:</strong> ${feature.name}</p>
+                        <p><strong>Stats:</strong></p>
+                        <ul>
+                            <li>${formatStat('Lying', stats.lying, statModifiers.lying)}</li>
+                            <li>${formatStat('Cheating', stats.cheating, statModifiers.cheating)}</li>
+                            <li>${formatStat('Health', stats.health, statModifiers.health)}</li>
+                        </ul>
+                `;
+
+                if (specialAbilities.length > 0) {
+                    html += `
+                        <p><strong>Special Abilities:</strong></p>
+                        <ul>
+                            ${specialAbilities.map(ability => `<li>${ability}</li>`).join('')}
+                        </ul>
+                    `;
+                }
+
+                if (spell) {
+                    html += `
+                        <p><strong>Spell:</strong> ${spell}</p>
+                    `;
+                }
+
+                html += `</div>`;
+            }
+
+            document.getElementById('result').innerHTML = html;
+        }
+
+        function generateAdventure() {
+            const goals = [
+                "Steal the Shiny",
+                "Eat the Thing",
+                "Kill the Thing",
+                "Kidnap the Baby",
+                "Flee the Place",
+                "Win the Talent Competition"
+            ];
+
+            const problems = [
+                "Lots of guards. Just, like a whole bunch of them.",
+                "Doggos! They are adorable and they love the taste of Goblins.",
+                "Rival Goblins. They have a Trenchcoat of their own.",
+                "A Wizard! With or without a lovely assistant.",
+                "Difficult Terrain. And by 'difficult', we mean 'probably lava'.",
+                "A Dragon! You're basically a Goblin Burrito to this thing."
+            ];
+
+            document.getElementById('result').innerHTML = `
+                <h2>Your Adventure:</h2>
+                <p><strong>Goal:</strong> ${randomFromArray(goals)}</p>
+                <p><strong>Main Problem:</strong> ${randomFromArray(problems)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
